@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="formNode" prefHeight="330.0" prefWidth="630.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.carhire.controller.RentDetailViewController">
+   <children>
+      <Label alignment="CENTER" layoutX="177.0" layoutY="40.0" prefHeight="35.0" prefWidth="226.0" text="Rent Detail" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Label>
+      <Label fx:id="rentIdLabel" layoutX="60.0" layoutY="100.0" text="ID:" />
+      <Label fx:id="customerIdLabel" layoutX="250.0" layoutY="100.0" text="Customer ID:" />
+      <Label fx:id="carIdLabel" layoutX="450.0" layoutY="100.0" text="Car ID:" />
+      <Label fx:id="fromLabel" layoutX="60.0" layoutY="130.0" text="From:" />
+      <Label fx:id="toLabel" layoutX="250.0" layoutY="130.0" text="To:" />
+      <Label fx:id="dailyRentalLabel" layoutX="450.0" layoutY="130.0" text="Daily Rental:" />
+      <Label fx:id="totalLabel" layoutX="60.0" layoutY="160.0" text="Total:" />
+      <Label fx:id="depositLabel" layoutX="250.0" layoutY="160.0" text="Refundable Deposit:" />
+      <Label fx:id="advanceLabel" layoutX="450.0" layoutY="160.0" text="Advance Payment:" />
+      <Label fx:id="returnedOnLabel" layoutX="60.0" layoutY="190.0" text="Returned On:" />
+      <Label fx:id="daysOverdueLabel" layoutX="250.0" layoutY="190.0" text="Days Overdue:" />
+      <Label fx:id="balanceLabel" layoutX="450.0" layoutY="190.0" text="Balance:" />
+      <Label fx:id="createdByLabel" layoutX="60.0" layoutY="240.0" text="Created By:" />
+      <Label fx:id="updatedByLabel" layoutX="60.0" layoutY="270.0" text="Updated By:" />
+      <Button layoutX="520.0" layoutY="260.0" mnemonicParsing="false" onAction="#closeBtnOnAction" prefWidth="50.0" text="Close" />
+   </children>
+</AnchorPane>

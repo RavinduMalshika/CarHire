@@ -5,6 +5,6 @@ import org.hibernate.Session;
 
 public class Main {
     public static void main(String[] args) {
-        Session session = SessionFactoryConfiguration.getInstance().getSession();
+        Launcher.main(args);
     }
 }
