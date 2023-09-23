@@ -12,6 +12,10 @@ import lk.ijse.carhire.dto.UserDto;
 import lk.ijse.carhire.service.ServiceFactory;
 import lk.ijse.carhire.service.custom.UserService;
 
+import javax.xml.bind.DatatypeConverter;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 public class LoginFormController {
 
     @FXML
@@ -43,10 +47,15 @@ public class LoginFormController {
         String inputPassword = pwdField.getText();
 
         try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(inputPassword.getBytes());
+            byte [] digest = md.digest();
+            String hashPassword = DatatypeConverter.printHexBinary(digest).toLowerCase();
+
             userDto = userService.getUser(inputUsername);
 
             if(userDto != null) {
-                if(inputPassword.equals(userDto.getPassword())) {
+                if(hashPassword.equals(userDto.getPassword())) {
                     stage = (Stage) this.rootNode.getScene().getWindow();
                     stage.close();
 
