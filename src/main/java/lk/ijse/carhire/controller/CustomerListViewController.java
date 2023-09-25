@@ -3,22 +3,27 @@ package lk.ijse.carhire.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import lk.ijse.carhire.dto.CustomerDto;
 import lk.ijse.carhire.service.ServiceFactory;
 import lk.ijse.carhire.service.custom.CustomerService;
+import lk.ijse.carhire.util.CustomerReport;
 import lombok.*;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class CustomerListViewController {
     public AnchorPane formNode;
@@ -27,6 +32,7 @@ public class CustomerListViewController {
     public Button deleteBtn;
     private CustomerService customerService;
     private static CustomerDto selectedDto;
+    private CustomerReport customerReport;
 
     public CustomerListViewController() {
         customerService = (CustomerService) ServiceFactory.getInstance().getService(ServiceFactory.ServiceTypes.CUSTOMER);
@@ -159,6 +165,170 @@ public class CustomerListViewController {
                     new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
                 }
             }
+        }
+    }
+
+    public void printBtnOnAction(ActionEvent actionEvent) {
+        Dialog dialog = new Dialog();
+        dialog.setTitle("Print Customer Details");
+        dialog.setHeaderText("Select the required filter criteria");
+
+        ToggleGroup group = new ToggleGroup();
+        RadioButton all = new RadioButton("All Customers");
+        RadioButton province = new RadioButton("Filter by Province");
+        Label provinceLabel = new Label("Province: ");
+        ComboBox provinceComboBox = new ComboBox();
+        provinceComboBox.getItems().clear();
+        provinceComboBox.getItems().addAll("Central", "Eastern", "North Central", "North Western", "Northern", "Sabaragamuwa", "Southern", "Uva", "Western");
+        provinceComboBox.getSelectionModel().select(0);
+        RadioButton rent = new RadioButton("Filter by Rent Status");
+        Label rentLabel = new Label("Renting: ");
+        ComboBox rentComboBox = new ComboBox();
+        rentComboBox.getItems().clear();
+        rentComboBox.getItems().addAll("Yes", "No");
+        rentComboBox.getSelectionModel().select(0);
+        group.getToggles().addAll(all, province, rent);
+        ButtonType print = new ButtonType("Print");
+
+        dialog.getDialogPane().getButtonTypes().addAll(print, ButtonType.CANCEL);
+
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+        gridPane.setPadding(new Insets(20, 150, 10, 10));
+        gridPane.add(all, 0, 0);
+        gridPane.add(province, 0, 1);
+        gridPane.add(provinceLabel, 1, 1);
+        gridPane.add(provinceComboBox, 2, 1);
+        gridPane.add(rent, 0, 2);
+        gridPane.add(rentLabel, 1, 2);
+        gridPane.add(rentComboBox, 2, 2);
+        dialog.getDialogPane().setContent(gridPane);
+
+        group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.equals(all)) {
+                rentComboBox.setDisable(true);
+                provinceComboBox.setDisable(true);
+            } else if (newValue.equals(province)) {
+                rentComboBox.setDisable(true);
+                provinceComboBox.setDisable(false);
+            } else if (newValue.equals(rent)) {
+                rentComboBox.setDisable(false);
+                provinceComboBox.setDisable(true);
+            }
+        });
+
+        all.setSelected(true);
+
+        Optional<ButtonType> result = dialog.showAndWait();
+        ButtonType buttonType = result.orElse(ButtonType.CANCEL);
+
+        if(buttonType == print && all.isSelected()) {
+            printAll();
+        } else if (buttonType == print && province.isSelected()) {
+            printFilteredByProvince((String) provinceComboBox.getSelectionModel().getSelectedItem());
+        } else if (buttonType == print && rent.isSelected()) {
+            printFilteredByRent((String) rentComboBox.getSelectionModel().getSelectedItem());
+        }
+    }
+
+    public void printAll() {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String filePath = "src/main/resources/report/customer_report.jrxml";
+
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("filter", "Showing All Customers");
+
+            List<CustomerDto> customerDtos = customerService.getAllCustomers();
+            List<CustomerReport> list = new ArrayList<>();
+            for(CustomerDto customerDto : customerDtos) {
+                CustomerReport entry = new CustomerReport(
+                        customerDto.getId(),
+                        customerDto.getTitle() + ". " + customerDto.getFirstName() + " " + customerDto.getLastName(),
+                        customerDto.getNic(),
+                        customerDto.getAddress() + ", " + customerDto.getCity() + ", " + customerDto.getProvince(),
+                        customerDto.getPhone().get(0) + "\n" + customerDto.getPhone().get(1),
+                        customerDto.getEmail(),
+                        customerDto.getRenting()
+                );
+                list.add(entry);
+            }
+
+            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(list);
+            JasperReport report = JasperCompileManager.compileReport(filePath);
+            JasperPrint print = JasperFillManager.fillReport(report, parameters, dataSource);
+            JasperExportManager.exportReportToPdfFile(print, "Reports/Customer Reports/Customer Report " + sdf.format(new Date()) +".pdf");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void printFilteredByProvince(String province) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String filePath = "src/main/resources/report/customer_report.jrxml";
+
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("filter", "Filtered by Province: " + province);
+
+            List<CustomerDto> customerDtos = customerService.getAllCustomers();
+            List<CustomerReport> list = new ArrayList<>();
+            for(CustomerDto customerDto : customerDtos) {
+                if(customerDto.getProvince().equals(province)) {
+                    CustomerReport entry = new CustomerReport(
+                            customerDto.getId(),
+                            customerDto.getTitle() + ". " + customerDto.getFirstName() + " " + customerDto.getLastName(),
+                            customerDto.getNic(),
+                            customerDto.getAddress() + ", " + customerDto.getCity() + ", " + customerDto.getProvince(),
+                            customerDto.getPhone().get(0) + "\n" + customerDto.getPhone().get(1),
+                            customerDto.getEmail(),
+                            customerDto.getRenting()
+                    );
+                    list.add(entry);
+                }
+            }
+
+            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(list);
+            JasperReport report = JasperCompileManager.compileReport(filePath);
+            JasperPrint print = JasperFillManager.fillReport(report, parameters, dataSource);
+            JasperExportManager.exportReportToPdfFile(print, "Reports/Customer Reports/Customer Report Filtered by Province(" + province + ") " + sdf.format(new Date()) +".pdf");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void printFilteredByRent(String rent) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String filePath = "src/main/resources/report/customer_report.jrxml";
+
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("filter", "Filtered by Rent: " + rent);
+
+            List<CustomerDto> customerDtos = customerService.getAllCustomers();
+            List<CustomerReport> list = new ArrayList<>();
+            for(CustomerDto customerDto : customerDtos) {
+                if(customerDto.getRenting().equals(rent)) {
+                    CustomerReport entry = new CustomerReport(
+                            customerDto.getId(),
+                            customerDto.getTitle() + ". " + customerDto.getFirstName() + " " + customerDto.getLastName(),
+                            customerDto.getNic(),
+                            customerDto.getAddress() + ", " + customerDto.getCity() + ", " + customerDto.getProvince(),
+                            customerDto.getPhone().get(0) + "\n" + customerDto.getPhone().get(1),
+                            customerDto.getEmail(),
+                            customerDto.getRenting()
+                    );
+                    list.add(entry);
+                }
+            }
+
+            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(list);
+            JasperReport report = JasperCompileManager.compileReport(filePath);
+            JasperPrint print = JasperFillManager.fillReport(report, parameters, dataSource);
+            JasperExportManager.exportReportToPdfFile(print, "Reports/Customer Reports/Customer Report Filtered by Rent(" + rent + ") " + sdf.format(new Date()) +".pdf");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 

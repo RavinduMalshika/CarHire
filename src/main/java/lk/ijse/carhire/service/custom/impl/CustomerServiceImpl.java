@@ -54,6 +54,7 @@ public class CustomerServiceImpl implements CustomerService {
         customerEntity.setCreatedBy(customerDto.getCreatedBy());
         customerEntity.setUpdatedBy(customerDto.getUpdatedBy());
         customerEntity.setEmail(customerDto.getEmail());
+        customerEntity.setRenting(customerDto.getRenting());
         System.out.println(customerEntity.toString());
 
         if(customerDao.update(customerEntity, session)) {

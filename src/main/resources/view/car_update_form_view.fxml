@@ -30,8 +30,8 @@
             <TextField fx:id="yearField" layoutX="410.0" layoutY="356.0" />
             <TextField fx:id="vehicleNumberField" layoutX="410.0" layoutY="196.0" />
             <TextField fx:id="dailyRentalField" layoutX="410.0" layoutY="400.0" />
-            <ComboBox fx:id="categoryComboBox" layoutX="410.0" layoutY="236.0" prefWidth="150.0" promptText="Select Category" />
-            <ComboBox fx:id="brandComboBox" layoutX="410.0" layoutY="276.0" prefWidth="150.0" promptText="Select Brand" />
+            <ComboBox fx:id="categoryComboBox" layoutX="410.0" layoutY="236.0" onAction="#categoryComboBoxOnAction" prefWidth="150.0" promptText="Select Category" />
+            <ComboBox fx:id="brandComboBox" layoutX="410.0" layoutY="276.0" onAction="#brandComboBoxOnAction" prefWidth="150.0" promptText="Select Brand" />
             <Label layoutX="260.0" layoutY="400.0" text="Daily Rental:" />
             <ComboBox fx:id="modelComboBox" layoutX="410.0" layoutY="316.0" prefWidth="150.0" promptText="Select Model" />
             <CheckBox fx:id="availabilityCheck" layoutX="410.0" layoutY="440.0" mnemonicParsing="false" />

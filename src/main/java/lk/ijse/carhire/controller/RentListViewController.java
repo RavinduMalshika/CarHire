@@ -3,23 +3,29 @@ package lk.ijse.carhire.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import lk.ijse.carhire.dto.CustomerDto;
 import lk.ijse.carhire.dto.RentDto;
 import lk.ijse.carhire.service.ServiceFactory;
 import lk.ijse.carhire.service.custom.RentService;
+import lk.ijse.carhire.util.CustomerReport;
+import lk.ijse.carhire.util.RentReport;
 import lombok.*;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class RentListViewController {
     public AnchorPane formNode;
@@ -165,6 +171,122 @@ public class RentListViewController {
                     new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
                 }
             }
+        }
+    }
+
+    public void printBtnOnAction(ActionEvent actionEvent) {
+        Dialog dialog = new Dialog();
+        dialog.setTitle("Print Rent Details");
+        dialog.setHeaderText("Select the required filter criteria");
+
+        ToggleGroup group = new ToggleGroup();
+        RadioButton all = new RadioButton("All Rents");
+        RadioButton returnStatus = new RadioButton("Filter by Returned Status");
+        Label returnLabel = new Label("Returned Status: ");
+        ComboBox returnComboBox = new ComboBox();
+        returnComboBox.getItems().clear();
+        returnComboBox.getItems().addAll("Not Returned", "Returned");
+        returnComboBox.getSelectionModel().select(0);
+        group.getToggles().addAll(all, returnStatus);
+        ButtonType print = new ButtonType("Print");
+
+        dialog.getDialogPane().getButtonTypes().addAll(print, ButtonType.CANCEL);
+
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+        gridPane.setPadding(new Insets(20, 150, 10, 10));
+        gridPane.add(all, 0, 0);
+        gridPane.add(returnStatus, 0, 1);
+        gridPane.add(returnLabel, 1, 1);
+        gridPane.add(returnComboBox, 2, 1);
+        dialog.getDialogPane().setContent(gridPane);
+
+        group.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.equals(all)) {
+                returnComboBox.setDisable(true);
+            } else if (newValue.equals(returnStatus)) {
+                returnComboBox.setDisable(false);
+            }
+        });
+
+        all.setSelected(true);
+
+        Optional<ButtonType> result = dialog.showAndWait();
+        ButtonType buttonType = result.orElse(ButtonType.CANCEL);
+
+        if(buttonType == print && all.isSelected()) {
+            printAll();
+        } else if (buttonType == print && returnStatus.isSelected()) {
+            printFilteredByReturned((String) returnComboBox.getSelectionModel().getSelectedItem());
+        }
+    }
+
+    public void printAll() {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String filePath = "src/main/resources/report/rent_report.jrxml";
+
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("filter", "Showing All Rents");
+
+            List<RentDto> rentDtos = rentService.getAllRents();
+            List<RentReport> list = new ArrayList<>();
+            for(RentDto rentDto : rentDtos) {
+                RentReport entry = new RentReport(
+                        rentDto.getRentId(),
+                        rentDto.getCustomerId(),
+                        rentDto.getCarId(),
+                        sdf.format(rentDto.getFromDate()),
+                        sdf.format(rentDto.getToDate()),
+                        rentDto.getReturnedOn() == null ? "-" : sdf.format(rentDto.getReturnedOn()),
+                        rentDto.getDailyRental(),
+                        rentDto.getTotal()
+                );
+                list.add(entry);
+            }
+
+            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(list);
+            JasperReport report = JasperCompileManager.compileReport(filePath);
+            JasperPrint print = JasperFillManager.fillReport(report, parameters, dataSource);
+            JasperExportManager.exportReportToPdfFile(print, "Reports/Rent Reports/Rent Report " + sdf.format(new Date()) +".pdf");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void printFilteredByReturned(String returnedStatus) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String filePath = "src/main/resources/report/rent_report.jrxml";
+
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("filter", "Filtered by Returned Status: " + returnedStatus);
+
+            List<RentDto> rentDtos = rentService.getAllRents();
+            List<RentReport> list = new ArrayList<>();
+            for(RentDto rentDto : rentDtos) {
+                if(rentDto.getIsReturned().equals(returnedStatus)) {
+                    RentReport entry = new RentReport(
+                            rentDto.getRentId(),
+                            rentDto.getCustomerId(),
+                            rentDto.getCarId(),
+                            sdf.format(rentDto.getFromDate()),
+                            sdf.format(rentDto.getToDate()),
+                            rentDto.getReturnedOn() == null ? "-" : sdf.format(rentDto.getReturnedOn()),
+                            rentDto.getDailyRental(),
+                            rentDto.getTotal()
+                    );
+                    list.add(entry);
+                }
+            }
+
+            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(list);
+            JasperReport report = JasperCompileManager.compileReport(filePath);
+            JasperPrint print = JasperFillManager.fillReport(report, parameters, dataSource);
+            JasperExportManager.exportReportToPdfFile(print, "Reports/Rent Reports/Rent Report Filtered by Returned(" + returnedStatus + ") " + sdf.format(new Date()) +".pdf");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 

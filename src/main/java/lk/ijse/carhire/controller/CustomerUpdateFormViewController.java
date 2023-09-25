@@ -68,6 +68,7 @@ public class CustomerUpdateFormViewController {
                 phone.add(phone2Field.getText());
                 customerDto.setPhone(phone);
                 customerDto.setEmail(emailField.getText());
+                customerDto.setRenting(previousCustomerDto.getRenting());
                 customerDto.setCreatedBy(previousCustomerDto.getCreatedBy());
                 customerDto.setUpdatedBy(LoginFormController.passUser());
 

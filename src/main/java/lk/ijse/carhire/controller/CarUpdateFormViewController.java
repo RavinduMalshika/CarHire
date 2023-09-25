@@ -176,4 +176,54 @@ public class CarUpdateFormViewController {
             return null;
         }
     }
+
+    public void categoryComboBoxOnAction(ActionEvent actionEvent) {
+        if(brandComboBox.getSelectionModel().getSelectedItem() == null) {
+            modelComboBox.getItems().clear();
+            List<CarModelDto> carModelDtos = carModelService.getAllModels();
+            ArrayList<String> models = new ArrayList<>();
+            for(CarModelDto carModelDto : carModelDtos) {
+                if(carModelDto.getCategory().equals((String) categoryComboBox.getSelectionModel().getSelectedItem())) {
+                    models.add(carModelDto.getModel());
+                }
+            }
+            modelComboBox.getItems().addAll(models);
+        } else {
+            modelComboBox.getItems().clear();
+            List<CarModelDto> carModelDtos = carModelService.getAllModels();
+            ArrayList<String> models = new ArrayList<>();
+            for(CarModelDto carModelDto : carModelDtos) {
+                if(carModelDto.getCategory().equals((String) categoryComboBox.getSelectionModel().getSelectedItem())
+                        && carModelDto.getBrand().equals((String) brandComboBox.getSelectionModel().getSelectedItem())) {
+                    models.add(carModelDto.getModel());
+                }
+            }
+            modelComboBox.getItems().addAll(models);
+        }
+    }
+
+    public void brandComboBoxOnAction(ActionEvent actionEvent) {
+        if(categoryComboBox.getSelectionModel().getSelectedItem() == null) {
+            modelComboBox.getItems().clear();
+            List<CarModelDto> carModelDtos = carModelService.getAllModels();
+            ArrayList<String> models = new ArrayList<>();
+            for(CarModelDto carModelDto : carModelDtos) {
+                if(carModelDto.getBrand().equals((String) brandComboBox.getSelectionModel().getSelectedItem())) {
+                    models.add(carModelDto.getModel());
+                }
+            }
+            modelComboBox.getItems().addAll(models);
+        } else {
+            modelComboBox.getItems().clear();
+            List<CarModelDto> carModelDtos = carModelService.getAllModels();
+            ArrayList<String> models = new ArrayList<>();
+            for(CarModelDto carModelDto : carModelDtos) {
+                if(carModelDto.getCategory().equals((String) categoryComboBox.getSelectionModel().getSelectedItem())
+                        && carModelDto.getBrand().equals((String) brandComboBox.getSelectionModel().getSelectedItem())) {
+                    models.add(carModelDto.getModel());
+                }
+            }
+            modelComboBox.getItems().addAll(models);
+        }
+    }
 }

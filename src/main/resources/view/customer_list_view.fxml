@@ -23,5 +23,6 @@
       <Button layoutX="50.0" layoutY="579.0" mnemonicParsing="false" onAction="#newBtnOnAction" prefWidth="60.0" style="-fx-background-color: C0F3B4; -fx-background-radius: 5; -fx-border-width: 1; -fx-border-color: black; -fx-border-radius: 5;" text="New" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="50.0" />
       <Button fx:id="updateBtn" layoutX="600.0" layoutY="579.0" mnemonicParsing="false" onAction="#updateBtnOnAction" prefWidth="60.0" style="-fx-background-color: B4CCF3; -fx-background-radius: 5; -fx-border-width: 1; -fx-border-color: black; -fx-border-radius: 5;" text="Update" AnchorPane.bottomAnchor="46.0" AnchorPane.rightAnchor="140.0" />
       <Button fx:id="deleteBtn" layoutX="690.0" layoutY="579.0" mnemonicParsing="false" onAction="#deleteBtnOnAction" prefWidth="60.0" style="-fx-background-color: F3B4B4; -fx-background-radius: 5; -fx-border-width: 1; -fx-border-color: black; -fx-border-radius: 5;" text="Delete" AnchorPane.bottomAnchor="46.0" AnchorPane.rightAnchor="50.0" />
+      <Button layoutX="140.0" layoutY="577.0" mnemonicParsing="false" onAction="#printBtnOnAction" prefWidth="60.0" style="-fx-background-color: C0F3B4; -fx-background-radius: 5; -fx-border-width: 1; -fx-border-color: black; -fx-border-radius: 5;" text="Print" />
    </children>
 </AnchorPane>

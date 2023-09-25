@@ -263,7 +263,6 @@ public class ManageDbViewController {
             Dialog dialog = new Dialog<>();
             dialog.setTitle("Update Model Entry");
             dialog.setHeaderText("Enter the new model details");
-            //dialog.setContentText("Previous Category: " + categoryTableDataModel.getId() + "\nPrevious Brand: " + brandTableDataModel.getId() + "\nPrevious Model: " + modelTableDataModel.getId());
 
             Label categoryDetail = new Label("Previous Category: " + categoryTableDataModel.getId());
             ComboBox categoryComboBox = new ComboBox();

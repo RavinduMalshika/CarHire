@@ -28,8 +28,8 @@
             <TextField fx:id="yearField" layoutX="350.0" layoutY="336.0" translateX="60.0" translateY="20.0" />
             <TextField fx:id="vehicleNumberField" layoutX="350.0" layoutY="176.0" translateX="60.0" translateY="20.0" />
             <TextField fx:id="dailyRentalField" layoutX="350.0" layoutY="376.0" translateX="60.0" translateY="20.0" />
-            <ComboBox fx:id="categoryComboBox" layoutX="350.0" layoutY="216.0" prefWidth="150.0" promptText="Select Category" translateX="60.0" translateY="20.0" />
-            <ComboBox fx:id="brandComboBox" layoutX="350.0" layoutY="256.0" prefWidth="150.0" promptText="Select Brand" translateX="60.0" translateY="20.0" />
+            <ComboBox fx:id="categoryComboBox" layoutX="350.0" layoutY="216.0" onAction="#categoryComboBoxOnAction" prefWidth="150.0" promptText="Select Category" translateX="60.0" translateY="20.0" />
+            <ComboBox fx:id="brandComboBox" layoutX="350.0" layoutY="256.0" onAction="#brandComboBoxOnAction" prefWidth="150.0" promptText="Select Brand" translateX="60.0" translateY="20.0" />
             <Label layoutX="200.0" layoutY="380.0" text="Daily Rental:" translateX="60.0" translateY="20.0" />
             <ComboBox fx:id="modelComboBox" layoutX="350.0" layoutY="296.0" prefWidth="150.0" promptText="Select Model" translateX="60.0" translateY="20.0" />
             <Label fx:id="idLabel" layoutX="350.0" layoutY="140.0" translateX="60.0" translateY="20.0">
