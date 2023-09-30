@@ -18,6 +18,7 @@ import lk.ijse.carhire.dto.RentDto;
 import lk.ijse.carhire.service.ServiceFactory;
 import lk.ijse.carhire.service.custom.RentService;
 import lk.ijse.carhire.util.CustomerReport;
+import lk.ijse.carhire.util.OpenFile;
 import lk.ijse.carhire.util.RentReport;
 import lombok.*;
 import net.sf.jasperreports.engine.*;
@@ -249,7 +250,9 @@ public class RentListViewController {
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(list);
             JasperReport report = JasperCompileManager.compileReport(filePath);
             JasperPrint print = JasperFillManager.fillReport(report, parameters, dataSource);
-            JasperExportManager.exportReportToPdfFile(print, "Reports/Rent Reports/Rent Report " + sdf.format(new Date()) +".pdf");
+            String location = "Reports/Rent Reports/Rent Report " + sdf.format(new Date()) +".pdf";
+            JasperExportManager.exportReportToPdfFile(print, location);
+            OpenFile.openFile(location);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -284,7 +287,9 @@ public class RentListViewController {
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(list);
             JasperReport report = JasperCompileManager.compileReport(filePath);
             JasperPrint print = JasperFillManager.fillReport(report, parameters, dataSource);
-            JasperExportManager.exportReportToPdfFile(print, "Reports/Rent Reports/Rent Report Filtered by Returned(" + returnedStatus + ") " + sdf.format(new Date()) +".pdf");
+            String location = "Reports/Rent Reports/Rent Report Filtered by Returned(" + returnedStatus + ") " + sdf.format(new Date()) +".pdf";
+            JasperExportManager.exportReportToPdfFile(print, location);
+            OpenFile.openFile(location);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

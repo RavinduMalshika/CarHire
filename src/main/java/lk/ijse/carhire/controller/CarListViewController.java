@@ -23,6 +23,7 @@ import lk.ijse.carhire.service.custom.CarModelService;
 import lk.ijse.carhire.service.custom.CarService;
 import lk.ijse.carhire.util.CarReport;
 import lk.ijse.carhire.util.CustomerReport;
+import lk.ijse.carhire.util.OpenFile;
 import lombok.*;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -305,7 +306,9 @@ public class CarListViewController {
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(list);
             JasperReport report = JasperCompileManager.compileReport(filePath);
             JasperPrint print = JasperFillManager.fillReport(report, parameters, dataSource);
-            JasperExportManager.exportReportToPdfFile(print, "Reports/Car Reports/Car Report " + sdf.format(new Date()) +".pdf");
+            String location = "Reports/Car Reports/Car Report " + sdf.format(new Date()) +".pdf";
+            JasperExportManager.exportReportToPdfFile(print, location);
+            OpenFile.openFile(location);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -340,7 +343,9 @@ public class CarListViewController {
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(list);
             JasperReport report = JasperCompileManager.compileReport(filePath);
             JasperPrint print = JasperFillManager.fillReport(report, parameters, dataSource);
-            JasperExportManager.exportReportToPdfFile(print, "Reports/Car Reports/Car Report Filtered by Category(" + category + ") " + sdf.format(new Date()) +".pdf");
+            String location = "Reports/Car Reports/Car Report Filtered by Category(" + category + ") " + sdf.format(new Date()) +".pdf";
+            JasperExportManager.exportReportToPdfFile(print, location);
+            OpenFile.openFile(location);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -375,7 +380,9 @@ public class CarListViewController {
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(list);
             JasperReport report = JasperCompileManager.compileReport(filePath);
             JasperPrint print = JasperFillManager.fillReport(report, parameters, dataSource);
-            JasperExportManager.exportReportToPdfFile(print, "Reports/Car Reports/Car Report Filtered by Brand(" + brand + ") " + sdf.format(new Date()) +".pdf");
+            String location = "Reports/Car Reports/Car Report Filtered by Brand(" + brand + ") " + sdf.format(new Date()) +".pdf";
+            JasperExportManager.exportReportToPdfFile(print, location);
+            OpenFile.openFile(location);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -410,7 +417,9 @@ public class CarListViewController {
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(list);
             JasperReport report = JasperCompileManager.compileReport(filePath);
             JasperPrint print = JasperFillManager.fillReport(report, parameters, dataSource);
-            JasperExportManager.exportReportToPdfFile(print, "Reports/Car Reports/Car Report Filtered by Availability(" + availability + ") " + sdf.format(new Date()) +".pdf");
+            String location = "Reports/Car Reports/Car Report Filtered by Availability(" + availability + ") " + sdf.format(new Date()) +".pdf";
+            JasperExportManager.exportReportToPdfFile(print, location);
+            OpenFile.openFile(location);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

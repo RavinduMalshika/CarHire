@@ -17,6 +17,7 @@ import lk.ijse.carhire.dto.CustomerDto;
 import lk.ijse.carhire.service.ServiceFactory;
 import lk.ijse.carhire.service.custom.CustomerService;
 import lk.ijse.carhire.util.CustomerReport;
+import lk.ijse.carhire.util.OpenFile;
 import lombok.*;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -258,7 +259,9 @@ public class CustomerListViewController {
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(list);
             JasperReport report = JasperCompileManager.compileReport(filePath);
             JasperPrint print = JasperFillManager.fillReport(report, parameters, dataSource);
-            JasperExportManager.exportReportToPdfFile(print, "Reports/Customer Reports/Customer Report " + sdf.format(new Date()) +".pdf");
+            String location = "Reports/Customer Reports/Customer Report " + sdf.format(new Date()) +".pdf";
+            JasperExportManager.exportReportToPdfFile(print, location);
+            OpenFile.openFile(location);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -292,7 +295,9 @@ public class CustomerListViewController {
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(list);
             JasperReport report = JasperCompileManager.compileReport(filePath);
             JasperPrint print = JasperFillManager.fillReport(report, parameters, dataSource);
-            JasperExportManager.exportReportToPdfFile(print, "Reports/Customer Reports/Customer Report Filtered by Province(" + province + ") " + sdf.format(new Date()) +".pdf");
+            String location = "Reports/Customer Reports/Customer Report Filtered by Province(" + province + ") " + sdf.format(new Date()) +".pdf";
+            JasperExportManager.exportReportToPdfFile(print, location);
+            OpenFile.openFile(location);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -326,7 +331,9 @@ public class CustomerListViewController {
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(list);
             JasperReport report = JasperCompileManager.compileReport(filePath);
             JasperPrint print = JasperFillManager.fillReport(report, parameters, dataSource);
-            JasperExportManager.exportReportToPdfFile(print, "Reports/Customer Reports/Customer Report Filtered by Rent(" + rent + ") " + sdf.format(new Date()) +".pdf");
+            String location = "Reports/Customer Reports/Customer Report Filtered by Rent(" + rent + ") " + sdf.format(new Date()) +".pdf";
+            JasperExportManager.exportReportToPdfFile(print, location);
+            OpenFile.openFile(location);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
