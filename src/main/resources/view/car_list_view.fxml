@@ -33,7 +33,7 @@
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor></Button>
-      <Button layoutX="140.0" layoutY="577.0" mnemonicParsing="false" onAction="#printBtnOnAction" prefWidth="60.0" style="-fx-background-color: C0F3B4; -fx-background-radius: 5; -fx-border-width: 1; -fx-border-color: black; -fx-border-radius: 5;" text="Print">
+      <Button layoutX="140.0" layoutY="577.0" mnemonicParsing="false" onAction="#printBtnOnAction" prefWidth="60.0" style="-fx-background-color: C0F3B4; -fx-background-radius: 5; -fx-border-width: 1; -fx-border-color: black; -fx-border-radius: 5;" text="Print" AnchorPane.bottomAnchor="45.8" AnchorPane.leftAnchor="140.0">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
